@@ -26,7 +26,9 @@ const App = () => {
           onChange={updateCritChance}
           style={{ marginLeft: "2rem", marginRight: "2rem", flexGrow: "1" }}
         />
-        <span>{critChance} %</span>
+        <span style={{ minWidth: "3rem", textAlign: "right" }}>
+          {critChance} %
+        </span>
       </div>
       <div style={{ fontStyle: "italic", marginTop: "2rem" }}>
         NOTE: Does not account for cannon waves
