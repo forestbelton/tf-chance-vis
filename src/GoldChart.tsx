@@ -1,7 +1,7 @@
 import { Datum, ResponsiveLine, Serie } from "@nivo/line";
 import { ScaleLinearSpec } from "@nivo/scales";
 
-const NUM_TRIALS = 100000;
+const DEFAULT_NUM_TRIALS = 100000;
 
 const FIRST_ROLL_WEIGHTS = {
   1: (1 - 1 / 3) / 5,
@@ -21,8 +21,9 @@ const SECOND_ROLL_WEIGHTS = {
   6: (1 - 1 / 3) / 5,
 };
 
-const MIN_WAVE_GOLD = 1 * 1 * 6;
-const MAX_WAVE_GOLD = 6 * 2 * 6;
+const numMinions = (isCannonWave: boolean) => 6 + (isCannonWave ? 1 : 0);
+const minWaveGold = (numMinions: number) => 1 * 1 * numMinions;
+const maxWaveGold = (numMinions: number) => 6 * 2 * numMinions;
 
 const coinFlip = (bias: number): boolean => {
   return Math.random() * 100 < bias;
@@ -41,13 +42,17 @@ const weightedRoll = (weights: Record<number, number>): number => {
   throw new Error("should not happen");
 };
 
-const generateSeries = (critChance: number): Serie => {
+const generateSeries = (props: GoldChartProps): Serie => {
+  const { critChance, isCannonWave, numTrials } = props;
+
+  const waveMinions = numMinions(isCannonWave);
+  const actualTrials = numTrials || DEFAULT_NUM_TRIALS;
   const hist: Record<number, number> = {};
 
-  for (let i = 0; i < NUM_TRIALS; i++) {
+  for (let i = 0; i < actualTrials; i++) {
     let gold = 0;
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < waveMinions; i++) {
       gold += weightedRoll(FIRST_ROLL_WEIGHTS);
       if (coinFlip(critChance)) {
         gold += weightedRoll(SECOND_ROLL_WEIGHTS);
@@ -58,10 +63,14 @@ const generateSeries = (critChance: number): Serie => {
   }
 
   const data: Datum[] = [];
-  for (let gold = MIN_WAVE_GOLD; gold <= MAX_WAVE_GOLD; gold++) {
+  for (
+    let gold = minWaveGold(waveMinions);
+    gold <= maxWaveGold(waveMinions);
+    gold++
+  ) {
     data.push({
       x: gold,
-      y: ((hist[gold] || 0) / NUM_TRIALS) * 100,
+      y: ((hist[gold] || 0) / DEFAULT_NUM_TRIALS) * 100,
     });
   }
 
@@ -73,13 +82,15 @@ const generateSeries = (critChance: number): Serie => {
 
 type GoldChartProps = {
   critChance: number;
+  isCannonWave: boolean;
+  numTrials?: number;
 };
 
-const GoldChart = ({ critChance }: GoldChartProps) => {
+const GoldChart = (props: GoldChartProps) => {
   const xScale: ScaleLinearSpec = {
     type: "linear",
-    min: MIN_WAVE_GOLD,
-    max: MAX_WAVE_GOLD,
+    min: minWaveGold(numMinions(false)),
+    max: maxWaveGold(numMinions(true)),
   };
 
   const yScale: ScaleLinearSpec = {
@@ -92,7 +103,7 @@ const GoldChart = ({ critChance }: GoldChartProps) => {
     <div style={{ height: 300, width: 500 }}>
       <ResponsiveLine
         margin={{ top: 50, bottom: 50, left: 50 }}
-        data={[generateSeries(critChance)]}
+        data={[generateSeries(props)]}
         xScale={xScale}
         yScale={yScale}
         yFormat={" >-.2f"}
