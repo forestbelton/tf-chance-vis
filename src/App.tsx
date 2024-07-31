@@ -1,25 +1,43 @@
 import debounce from "debounce";
 import React, { useCallback, useState } from "react";
 import GoldChart from "./GoldChart";
+import { Serie } from "@nivo/line";
+import { generateSeries } from "./logic";
 
 const App = () => {
   const [critChance, setCritChance] = useState(0);
   const [isCannonWave, setIsCannonWave] = useState(false);
+  const [data, setData] = useState<Serie>(() =>
+    generateSeries({
+      critChance,
+      isCannonWave,
+    })
+  );
 
-  const setCritChanceDebounced = useCallback(debounce(setCritChance, 25), []);
+  const updateData = useCallback(
+    debounce((critChance: number, isCannonWave: boolean) => {
+      const newData = generateSeries({ critChance, isCannonWave });
+      setData(newData);
+    }, 100),
+    []
+  );
 
   const updateCritChance = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    setCritChanceDebounced(parseFloat(ev.target.value));
+    const newCritChance = parseFloat(ev.target.value);
+    setCritChance(newCritChance);
+    updateData(newCritChance, isCannonWave);
   };
 
   const updateIsCannonWave = (ev: React.ChangeEvent<HTMLInputElement>) => {
-    setIsCannonWave(ev.target.checked);
+    const newIsCannonWave = ev.target.checked;
+    setIsCannonWave(newIsCannonWave);
+    updateData(critChance, newIsCannonWave);
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <h1>Twisted Fate's Loaded Dice</h1>
-      <GoldChart critChance={critChance} isCannonWave={isCannonWave} />
+      <GoldChart data={data} />
       <div style={{ display: "flex", marginTop: "2rem" }}>
         <label
           htmlFor="critChance"
@@ -32,7 +50,8 @@ const App = () => {
           type="range"
           min="0"
           max="100"
-          defaultValue="0"
+          step="5"
+          value={critChance}
           onChange={updateCritChance}
           style={{ flexGrow: "1" }}
         />
