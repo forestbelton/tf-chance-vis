@@ -3,7 +3,6 @@ import AbilityCard from "./AbilityCard";
 import ChartParameterForm from "./ChartParameterForm";
 import GoldChart from "./GoldChart";
 import { type Probabilities } from "./logic";
-import "./App.css";
 
 type AppProps = {
   probabilities: Probabilities;
