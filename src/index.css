@@ -30,3 +30,74 @@ h1 {
   padding: 2rem;
   text-align: center;
 }
+
+.App {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.App h1 {
+  margin: 0;
+}
+
+.AbilityCard {
+  border: 1px solid #353b48;
+  border-radius: 4px;
+  max-width: 500px;
+  padding: 0 0.75rem;
+  text-align: left;
+}
+
+.AbilityCard .gold {
+  color: #fbc531;
+  font-weight: bold;
+}
+
+.AbilityCard .critChance {
+  color: #e84118;
+  font-weight: bold;
+}
+
+.AbilityCard .aside {
+  font-style: italic;
+}
+
+.AbilityCard .probabilityTable {
+  border-top: 1px solid black;
+  display: grid;
+  grid-template-rows: repeat(3, auto);
+  grid-template-columns: repeat(7, auto);
+  margin: 1rem 0;
+  padding-top: 0.5rem;
+  text-align: center;
+}
+
+.GoldChart {
+  height: 250px;
+  width: 500px;
+}
+
+.ChartParameterForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ChartParameterForm .field {
+  display: flex;
+}
+
+.ChartParameterForm .field label {
+  min-width: 7rem;
+  text-align: left;
+}
+
+.ChartParameterForm .field input[name="critChance"] {
+  flex-grow: 1;
+}
+
+.ChartParameterForm .critChance {
+  min-width: 3rem;
+  text-align: right;
+}
