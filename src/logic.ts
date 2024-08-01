@@ -42,10 +42,10 @@ const weightedRoll = (weights: Record<number, number>): number => {
 };
 
 export type SeriesOptions = {
-    critChance: number;
-    isCannonWave: boolean;
-    numTrials?: number;
-}
+  critChance: number;
+  isCannonWave: boolean;
+  numTrials?: number;
+};
 
 export const generateSeries = (props: SeriesOptions): Serie => {
   const { critChance, isCannonWave, numTrials } = props;
@@ -83,4 +83,22 @@ export const generateSeries = (props: SeriesOptions): Serie => {
     id: "Series",
     data,
   };
+};
+
+export type Probabilities = Record<number, Record<string, Serie>>;
+
+export const generateAllSeries = (): Probabilities => {
+  const allSeries: Probabilities = {};
+
+  for (let critChance = 0; critChance <= 100; critChance += 5) {
+    allSeries[critChance] = {};
+    for (const isCannonWave of [false, true]) {
+      allSeries[critChance][isCannonWave.toString()] = generateSeries({
+        critChance,
+        isCannonWave,
+      });
+    }
+  }
+
+  return allSeries;
 };

@@ -1,8 +1,8 @@
+import { Serie } from "@nivo/line";
 import debounce from "debounce";
 import React, { useCallback, useState } from "react";
 import GoldChart from "./GoldChart";
-import { Serie } from "@nivo/line";
-import { generateSeries } from "./logic";
+import { type Probabilities } from "./logic";
 
 const CRIT_COLOR_HEX = "#e84118";
 const GOLD_COLOR_HEX = "#fbc531";
@@ -42,22 +42,23 @@ const Probabilities = () => (
   </div>
 );
 
-const App = () => {
+type AppProps = {
+  probabilities: Probabilities;
+};
+
+const App = ({ probabilities }: AppProps) => {
   const [critChance, setCritChance] = useState(0);
   const [isCannonWave, setIsCannonWave] = useState(false);
-  const [data, setData] = useState<Serie>(() =>
-    generateSeries({
-      critChance,
-      isCannonWave,
-    })
+  const [data, setData] = useState<Serie>(
+    () => probabilities[critChance][isCannonWave.toString()]
   );
 
   const updateData = useCallback(
     debounce((critChance: number, isCannonWave: boolean) => {
-      const newData = generateSeries({ critChance, isCannonWave });
+      const newData = probabilities[critChance][isCannonWave.toString()];
       setData(newData);
-    }, 100),
-    []
+    }, 20),
+    [probabilities]
   );
 
   const updateCritChance = (ev: React.ChangeEvent<HTMLInputElement>) => {
