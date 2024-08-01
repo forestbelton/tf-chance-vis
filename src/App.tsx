@@ -7,6 +7,41 @@ import { generateSeries } from "./logic";
 const CRIT_COLOR_HEX = "#e84118";
 const GOLD_COLOR_HEX = "#fbc531";
 
+const Probabilities = () => (
+  <div
+    style={{
+      borderTop: "1px solid black",
+      display: "grid",
+      gridTemplateRows: "repeat(3, auto)",
+      gridTemplateColumns: "repeat(7, auto)",
+      margin: "1rem 0",
+      paddingTop: "0.5rem",
+      textAlign: "center",
+    }}
+  >
+    <div style={{ gridColumn: 2, gridRow: 1 }}>1</div>
+    <div style={{ gridColumn: 3, gridRow: 1 }}>2</div>
+    <div style={{ gridColumn: 4, gridRow: 1 }}>3</div>
+    <div style={{ gridColumn: 5, gridRow: 1 }}>4</div>
+    <div style={{ gridColumn: 6, gridRow: 1 }}>5</div>
+    <div style={{ gridColumn: 7, gridRow: 1 }}>6</div>
+    <div style={{ gridColumn: 1, gridRow: 2 }}>Initial Roll</div>
+    <div style={{ gridColumn: 2, gridRow: 2 }}>13.33%</div>
+    <div style={{ gridColumn: 3, gridRow: 2 }}>13.33%</div>
+    <div style={{ gridColumn: 4, gridRow: 2 }}>13.33%</div>
+    <div style={{ gridColumn: 5, gridRow: 2 }}>13.33%</div>
+    <div style={{ gridColumn: 6, gridRow: 2 }}>13.33%</div>
+    <div style={{ gridColumn: 7, gridRow: 2 }}>33.33%</div>
+    <div style={{ gridColumn: 1, gridRow: 3 }}>Critical Roll</div>
+    <div style={{ gridColumn: 2, gridRow: 3 }}>33.33%</div>
+    <div style={{ gridColumn: 3, gridRow: 3 }}>13.33%</div>
+    <div style={{ gridColumn: 4, gridRow: 3 }}>13.33%</div>
+    <div style={{ gridColumn: 5, gridRow: 3 }}>13.33%</div>
+    <div style={{ gridColumn: 6, gridRow: 3 }}>13.33%</div>
+    <div style={{ gridColumn: 7, gridRow: 3 }}>13.33%</div>
+  </div>
+);
+
 const App = () => {
   const [critChance, setCritChance] = useState(0);
   const [isCannonWave, setIsCannonWave] = useState(false);
@@ -69,6 +104,7 @@ const App = () => {
           increased chance of granting{" "}
           <strong style={{ color: GOLD_COLOR_HEX }}>1 gold</strong>.
         </p>
+        <Probabilities />
       </div>
       <GoldChart data={data} />
       <div style={{ display: "flex", marginTop: "2rem" }}>
